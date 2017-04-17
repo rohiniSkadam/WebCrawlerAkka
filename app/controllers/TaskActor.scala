@@ -8,6 +8,10 @@ import org.jsoup.Jsoup
 import scala.collection.JavaConverters._
 import scala.util.{Failure, Success}
 
+/**
+  * Created by synerzip on 7/4/17.
+  */
+
 object TaskActor {
 
   case class Done() {}
@@ -30,19 +34,14 @@ class TaskActor(url: String, depth: Int) extends Actor {
 
   def receive = {
     case body: String =>
-      val links = getAllLinks(body)
+      val links = Jsoup.parse(body, url).select("a[href]").iterator().asScala.map(_.absUrl("href"))
       links.foreach(context.parent ! LinkChecker.CheckUrl(_, depth))
     case _: Status.Failure => stop()
     case Abort => stop()
-  }
-
-  def getAllLinks(body: String): Iterator[String] = {
-    Jsoup.parse(body, url).select("a[href]").iterator().asScala.map(_.absUrl("href"))
   }
 
   def stop(): Unit = {
     context.parent ! Done
     context.stop(self)
   }
-
 }

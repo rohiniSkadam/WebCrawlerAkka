@@ -4,6 +4,10 @@ import com.ning.http.client.{AsyncCompletionHandler, AsyncHttpClient, AsyncHttpC
 
 import scala.concurrent.{Future, Promise}
 
+/**
+  * Created by synerzip on 7/4/17.
+  */
+
 object ClientActor {
 
   val clientConfig = new AsyncHttpClientConfig.Builder()
@@ -17,7 +21,6 @@ object ClientActor {
         promise.success(response.getResponseBody)
         response
       }
-
     })
     promise.future
   }

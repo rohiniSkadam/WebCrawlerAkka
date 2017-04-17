@@ -2,15 +2,15 @@ package controllers
 
 import akka.actor.{Actor, ActorRef, Props}
 import controllers.LinkChecker.Result
-import controllers.ServerActor.{webCrawlerRequest, webCrawlerResponse}
+import controllers.ServerActor.webCrawlerRequest
 import scala.collection.mutable
 
+/**
+  * Created by synerzip on 7/4/17.
+  */
 object ServerActor {
 
   case class webCrawlerRequest(url: String, depth: Integer) {}
-
-  case class webCrawlerResponse(url: String, links: Set[String]) {}
-
 }
 
 class ServerActor extends Actor {
@@ -27,7 +27,7 @@ class ServerActor extends Actor {
       clientMap(url) += sender
     case Result(url, links) =>
       clientMap(url).foreach(l=>{
-        l ! webCrawlerResponse(url,links)
+        l ! links
       })
   }
 }
