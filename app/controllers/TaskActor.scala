@@ -24,7 +24,7 @@ class TaskActor(url: String, depth: Int) extends Actor {
   implicit val ec = context.dispatcher
 
   val currentHost = new URL(url).getHost
-  ClientActor.geturl(url) onComplete {
+  CrawlClient.geturl(url) onComplete {
     case Success(body) => self ! body
     case Failure(err) => self ! Status.Failure(err)
   }

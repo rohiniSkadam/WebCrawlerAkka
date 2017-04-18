@@ -8,7 +8,7 @@ import scala.concurrent.{Future, Promise}
   * Created by synerzip on 7/4/17.
   */
 
-object ClientActor {
+object CrawlClient {
   val clientConfig = new AsyncHttpClientConfig.Builder()
   val clientUrl = new AsyncHttpClient(clientConfig.build())
 
