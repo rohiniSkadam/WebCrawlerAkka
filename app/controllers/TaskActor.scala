@@ -17,6 +17,11 @@ object TaskActor {
   case class End() {}
 }
 
+/**
+  * Parse the URL & returns the links
+  * @param url - input url
+  * @param depth - depth of crawling
+  */
 class TaskActor(url: String, depth: Int) extends Actor {
 
   import TaskActor._
@@ -32,13 +37,16 @@ class TaskActor(url: String, depth: Int) extends Actor {
   def receive = {
     case body: String =>
       val links = Jsoup.parse(body, url).select("a[href]").iterator().asScala.map(_.absUrl("href"))
-      links.foreach(f=>{
-        context.parent ! LinkChecker.UrlCheck(f, depth)
+      links.foreach(url=>{
+        context.parent ! LinkChecker.UrlCheck(url, depth)
       })
     case _: Status.Failure => stop()
     case End => stop()
   }
 
+  /**
+    * Sends the Done message to parent Actor & Stops the current Actor
+    */
   def stop(): Unit = {
     context.parent ! Done
     context.stop(self)
