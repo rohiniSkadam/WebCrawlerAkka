@@ -18,8 +18,7 @@ class ServerActor extends Actor {
 
   def receive = {
     case Request(url, depth) =>
-      val controller = urlMap.get(url)
-      if (controller.isEmpty) {
+      if (urlMap.get(url).isEmpty) {
         urlMap += (url -> context.actorOf(Props(new LinkChecker(url, depth))))
         clientMap += (url -> Set.empty[ActorRef])
       }

@@ -30,8 +30,8 @@ class LinkChecker(root: String, newDepth: Integer) extends Actor {
     case Done =>
       child -= sender
       if (child.isEmpty) context.parent ! Result(root, temp)
-    case ReceiveTimeout => child.foreach(reciveTimeout=>{
-      reciveTimeout ! TaskActor.End
+    case ReceiveTimeout => child.foreach(timeout=>{
+      timeout ! TaskActor.End
     })
   }
 }
