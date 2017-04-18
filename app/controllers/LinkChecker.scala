@@ -1,9 +1,10 @@
 package controllers
 
 import akka.actor.{Actor, ActorRef, Props, ReceiveTimeout}
-import controllers.LinkChecker.{UrlCheck, Result}
+import controllers.LinkChecker.{Result, UrlCheck}
 import controllers.TaskActor.Done
 
+import scala.collection.immutable.HashSet
 import scala.concurrent.duration._
 
 /**
@@ -14,22 +15,25 @@ object LinkChecker {
   case class Result(url: String, links: Set[String]) {}
 }
 
-class LinkChecker(root: String, newDepth: Integer) extends Actor {
+class LinkChecker(root: String, depth: Integer) extends Actor {
 
   var temp = Set.empty[String]
   var child = Set.empty[ActorRef]
+  var temp2 =Set.empty[String]
 
-  self ! UrlCheck(root, newDepth)
+  val maxdepth=depth
+  self ! UrlCheck(root, 0)
   context.setReceiveTimeout(10 seconds)
 
   def receive = {
     case UrlCheck(url, depth) =>
-      if (!temp(url) && depth > 0)
-        child += context.actorOf(Props(new TaskActor(url, depth - 1)))
+      if (!temp(url) && depth < maxdepth)
+        child += context.actorOf(Props(new TaskActor(url, depth + 1)))
       temp += url
+      temp2+=depth+" "+url
     case Done =>
       child -= sender
-      if (child.isEmpty) context.parent ! Result(root, temp)
+      if (child.isEmpty) context.parent ! Result(root, temp2)
     case ReceiveTimeout => child.foreach(timeout=>{
       timeout ! TaskActor.End
     })

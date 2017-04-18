@@ -13,7 +13,7 @@ object ServerActor {
 }
 
 class ServerActor extends Actor {
-  val clientMap: mutable.Map[String, Set[ActorRef]] = mutable.Map[String, Set[ActorRef]]()
+  val clientMap: mutable.HashMap[String, Set[ActorRef]] = mutable.HashMap[String, Set[ActorRef]]()
   val urlMap: mutable.Map[String, ActorRef] = mutable.Map[String, ActorRef]()
 
   def receive = {
