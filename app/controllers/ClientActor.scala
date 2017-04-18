@@ -9,11 +9,10 @@ import scala.concurrent.{Future, Promise}
   */
 
 object ClientActor {
-
   val clientConfig = new AsyncHttpClientConfig.Builder()
   val clientUrl = new AsyncHttpClient(clientConfig.build())
 
-  def get(url: String): Future[String] = {
+  def geturl(url: String): Future[String] = {
     val promise = Promise[String]()
     val request = clientUrl.prepareGet(url).build()
     clientUrl.executeRequest(request, new AsyncCompletionHandler[Response]() {

@@ -13,11 +13,8 @@ import scala.util.{Failure, Success}
   */
 
 object TaskActor {
-
   case class Done() {}
-
-  case class Abort() {}
-
+  case class End() {}
 }
 
 class TaskActor(url: String, depth: Int) extends Actor {
@@ -27,7 +24,7 @@ class TaskActor(url: String, depth: Int) extends Actor {
   implicit val ec = context.dispatcher
 
   val currentHost = new URL(url).getHost
-  ClientActor.get(url) onComplete {
+  ClientActor.geturl(url) onComplete {
     case Success(body) => self ! body
     case Failure(err) => self ! Status.Failure(err)
   }
@@ -35,9 +32,9 @@ class TaskActor(url: String, depth: Int) extends Actor {
   def receive = {
     case body: String =>
       val links = Jsoup.parse(body, url).select("a[href]").iterator().asScala.map(_.absUrl("href"))
-      links.foreach(context.parent ! LinkChecker.CheckUrl(_, depth))
+      links.foreach(context.parent ! LinkChecker.UrlCheck(_, depth))
     case _: Status.Failure => stop()
-    case Abort => stop()
+    case End => stop()
   }
 
   def stop(): Unit = {
