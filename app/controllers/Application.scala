@@ -13,7 +13,7 @@ import scala.concurrent.{Await, Future}
 /**
   * Created by synerzip on 7/4/17.
   */
-object Application extends Controller with App{
+object Application extends Controller {
 
   def webcrawl = Action.async { request =>
     val jsonRequest = request.body.asJson.get

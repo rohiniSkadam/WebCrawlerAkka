@@ -6,7 +6,6 @@ import akka.pattern.ask
 import akka.util.Timeout
 
 import scala.concurrent.duration._
-import scala.collection.immutable.HashSet
 import scala.concurrent.Await
 
 /**
