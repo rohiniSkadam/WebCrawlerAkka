@@ -25,9 +25,7 @@ object TaskActor {
 class TaskActor(url: String, depth: Int) extends Actor {
 
   import TaskActor._
-
   implicit val ec = context.dispatcher
-
   val currentHost = new URL(url).getHost
   CrawlClient.geturl(url) onComplete {
     case Success(body) => self ! body

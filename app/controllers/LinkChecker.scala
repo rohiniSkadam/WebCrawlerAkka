@@ -20,11 +20,9 @@ object LinkChecker {
   * @param depth - depth of crawling
   */
 class LinkChecker(root: String, depth: Integer) extends Actor {
-
   var temp = Set.empty[String]
   var child = Set.empty[ActorRef]
   var temp2 =Map.empty[String,Int]
-
   val maxdepth=depth
   self ! UrlCheck(root, 0)
   context.setReceiveTimeout(10 seconds)
