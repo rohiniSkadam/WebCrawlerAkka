@@ -1,7 +1,6 @@
 package controllers
 
-import com.ning.http.client.{AsyncCompletionHandler, AsyncHttpClient, AsyncHttpClientConfig, Response}
-
+import org.asynchttpclient.{AsyncCompletionHandler,  DefaultAsyncHttpClient, Response}
 import scala.concurrent.{Future, Promise}
 
 /**
@@ -9,9 +8,7 @@ import scala.concurrent.{Future, Promise}
   */
 
 object CrawlClient {
-  val clientConfig = new AsyncHttpClientConfig.Builder()
-  val clientUrl = new AsyncHttpClient(clientConfig.build())
-
+  val clientUrl = new DefaultAsyncHttpClient
   /**
     * Prepare & Execute HTTP client request.
     * @param url - input url
